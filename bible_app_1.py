@@ -19,7 +19,8 @@ client = OpenAI(
 )
 
 # Caminho para os arquivos da Bíblia
-BIBLE_PATH = "BibleMarkdown/versoes_online/acf2007-MHenry"
+BIBLE_PATH = "versoes_online/acf2007-MHenry"
+
 
 # Mapeamento dos livros da Bíblia
 BIBLE_BOOKS = {
