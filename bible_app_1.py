@@ -4,6 +4,23 @@ import glob
 from pathlib import Path
 from openai import OpenAI
 import re
+import os
+import streamlit as st
+
+BIBLE_PATH = "versoes_online/acf2007-MHenry"
+
+def test_bible_path():
+    st.write(f"Caminho absoluto da Bíblia: {os.path.abspath(BIBLE_PATH)}")
+    existe = os.path.exists(BIBLE_PATH)
+    st.write(f"A pasta existe? {existe}")
+    if existe:
+        subpastas = os.listdir(BIBLE_PATH)
+        st.write(f"Conteúdo da pasta: {subpastas}")
+    else:
+        st.error(f"Pasta {BIBLE_PATH} não encontrada")
+
+test_bible_path()
+
 
 # Configuração da página
 st.set_page_config(
