@@ -160,7 +160,7 @@ def read_chapter(book_code, chapter):
     return None
 
 def get_hebrew_translation(text):
-    """Obtém tradução literal hebraico-português, palavra por palavra, usando OpenAI"""
+    """Obtém tradução literal palavra por palavra do hebraico para o português"""
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -168,22 +168,30 @@ def get_hebrew_translation(text):
                 {
                     "role": "system",
                     "content": (
-                        "Você é um tradutor acadêmico. Traduza do hebraico bíblico para o português "
-                        "literalmente, palavra por palavra, mantendo a ordem original. "
-                        "Não interprete, apenas traduza diretamente. Não adicione explicações."
+                        "Você é um tradutor acadêmico de hebraico bíblico. "
+                        "Receberá versículos em português e deverá retornar o equivalente hebraico "
+                        "e uma tradução palavra por palavra. Use o seguinte formato:\n\n"
+                        "**1**\n"
+                        "יְהוָה = O Senhor\n"
+                        "רֹעִי = meu pastor\n"
+                        "לֹא = não\n"
+                        "אֶחְסָר = faltarei\n\n"
+                        "Faça isso para cada versículo enviado. Não interprete. Não resuma. "
+                        "Apenas traduza e explique palavra por palavra."
                     )
                 },
                 {
                     "role": "user",
-                    "content": f"Traduza palavra por palavra o seguinte texto: {text}"
+                    "content": f"Faça a tradução literal dos seguintes versículos:\n{text}"
                 }
             ],
             max_tokens=1500,
-            temperature=0.0
+            temperature=0.1
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
         return f"Erro ao obter tradução: {str(e)}"
+
 
 
 # Interface principal
