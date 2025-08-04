@@ -162,9 +162,33 @@ def read_chapter(book_code, chapter):
 def get_hebrew_translation(text):
     """Obtém tradução literal palavra por palavra do hebraico para o português"""
     try:
-        # Simula uma chamada de API para evitar a necessidade de uma chave
-        # Em um ambiente de produção, você substituiria isso pela chamada real da API
-        return f"Tradução simulada para: {text}"
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Você é um tradutor acadêmico de hebraico bíblico. "
+                        "Receberá versículos em português e deverá retornar o equivalente hebraico "
+                        "e uma tradução palavra por palavra. Use o seguinte formato:\n\n"
+                        "**1**\n"
+                        "יְהוָה = O Senhor\n"
+                        "רֹעִי = meu pastor\n"
+                        "לֹא = não\n"
+                        "אֶחְסָר = faltarei\n\n"
+                        "Faça isso para cada versículo enviado. Não interprete. Não resuma. "
+                        "Apenas traduza e explique palavra por palavra."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": f"Faça a tradução literal dos seguintes versículos:\n{text}"
+                }
+            ],
+            max_tokens=1500,
+            temperature=0.1
+        )
+        return response.choices[0].message.content.strip()
     except Exception as e:
         return f"Erro ao obter tradução: {str(e)}"
 
