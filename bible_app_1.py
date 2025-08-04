@@ -160,26 +160,31 @@ def read_chapter(book_code, chapter):
     return None
 
 def get_hebrew_translation(text):
-    """Obtém tradução para hebraico usando OpenAI"""
+    """Obtém tradução literal hebraico-português, palavra por palavra, usando OpenAI"""
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {
-                    "role": "system", 
-                    "content": "Você é um especialista em línguas bíblicas. Traduza o texto bíblico fornecido para o hebraico original e forneça também uma tradução direta para o português moderno."
+                    "role": "system",
+                    "content": (
+                        "Você é um tradutor acadêmico. Traduza do hebraico bíblico para o português "
+                        "literalmente, palavra por palavra, mantendo a ordem original. "
+                        "Não interprete, apenas traduza diretamente. Não adicione explicações."
+                    )
                 },
                 {
                     "role": "user",
-                    "content": f"Traduza este texto bíblico para o hebraico original e forneça uma tradução direta para o português: {text}"
+                    "content": f"Traduza palavra por palavra o seguinte texto: {text}"
                 }
             ],
-            max_tokens=1000,
-            temperature=0.3
+            max_tokens=1500,
+            temperature=0.0
         )
-        return response.choices[0].message.content
+        return response.choices[0].message.content.strip()
     except Exception as e:
         return f"Erro ao obter tradução: {str(e)}"
+
 
 # Interface principal
 def main():
